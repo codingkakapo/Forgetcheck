@@ -1,0 +1,17 @@
+<layout>
+    <data>
+        <variable name="vm" type="jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel"/>
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="jp.codingkakapo.forgetcheck.view.CheckListFragment">
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@{vm.fuga}"
+            />
+    </FrameLayout>
+</layout>
