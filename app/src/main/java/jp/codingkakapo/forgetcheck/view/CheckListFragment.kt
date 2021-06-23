@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
+import jp.codingkakapo.forgetcheck.utils.CheckListItemAdapter
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
 
-    //private val _vm = CheckListViewModel()
+    private val _vm = CheckListViewModel()
     private lateinit var binding : FragmentChecklistBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,9 +22,25 @@ class CheckListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        FragmentChecklistBinding.inflate(inflater, container, false).vm = CheckListViewModel()
+        binding = FragmentChecklistBinding.inflate(inflater, container, false)
+        binding.vm = _vm
         return binding.root
         //return inflater.inflate(R.layout.fragment_checklist, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // ListViewにAdapterをセット
+        val lvm = binding.vm
+
+        if (lvm != null) {
+            binding.itemList.adapter = CheckListItemAdapter(lvm.anxietyList)
+            //CheckListItemAdapter(ArrayList(0))
+            // ViewModelがDataBindingに存在する場合のみ
+            //listDataAdapter = ListDataAdapter(ArrayList(0))
+            //viewDataBinding.itemList.adapter = listDataAdapter
+        }
+
     }
 }
