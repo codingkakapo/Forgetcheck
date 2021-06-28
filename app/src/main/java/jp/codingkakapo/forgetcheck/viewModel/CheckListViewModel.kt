@@ -1,10 +1,12 @@
 package jp.codingkakapo.forgetcheck.viewModel
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import jp.codingkakapo.forgetcheck.utils.Const
 import java.time.LocalDateTime
 
 class CheckListViewModel() : ViewModel() {
@@ -14,6 +16,8 @@ class CheckListViewModel() : ViewModel() {
     init{
         anxietyList = getTestData()
     }
+
+    var hoge : String = "CheckListViewModel.プロパティほげ"
 
     // 表示テスト用のリスト
     fun getTestData() : List<AnxietyModel>{
@@ -27,10 +31,13 @@ class CheckListViewModel() : ViewModel() {
         )
     }
 
-    // チェック・解除動作実装
-    fun onAnxietyClick(){
+    // fragment_checklist　floating action button clicked.
+    fun onFABClick(){
+        //do なにか
+        Log.d(Const.d,"CheckListViewModel.onClick()だよ")
     }
 }
+
 
 /*
 

@@ -2,11 +2,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="item" type="jp.codingkakapo.forgetcheck.model.AnxietyModel"/>
+        <variable name="handler" type="jp.codingkakapo.forgetcheck.utils.CheckListItemHandler"/>
     </data>
     <LinearLayout
+        android:id="@+id/checklist_item_linear_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
         <TextView
             android:text="@{item.Name}"
             android:layout_gravity="center_vertical"
@@ -14,5 +17,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="28sp"/>
+        <Button
+            android:id="@+id/checklist_item_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="削除"
+            android:onClick='@{() -> handler.onClickRemoveButton()}'
+            />
     </LinearLayout>
 </layout>

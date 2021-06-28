@@ -1,6 +1,7 @@
 package jp.codingkakapo.forgetcheck.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,6 @@ class CheckListFragment : Fragment() {
         binding = FragmentChecklistBinding.inflate(inflater, container, false)
         binding.vm = _vm
         return binding.root
-        //return inflater.inflate(R.layout.fragment_checklist, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -36,11 +36,8 @@ class CheckListFragment : Fragment() {
 
         if (lvm != null) {
             binding.itemList.adapter = CheckListItemAdapter(lvm.anxietyList)
-            //CheckListItemAdapter(ArrayList(0))
-            // ViewModelがDataBindingに存在する場合のみ
-            //listDataAdapter = ListDataAdapter(ArrayList(0))
-            //viewDataBinding.itemList.adapter = listDataAdapter
         }
 
     }
 }
+
