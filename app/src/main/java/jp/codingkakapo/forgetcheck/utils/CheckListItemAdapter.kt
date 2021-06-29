@@ -21,18 +21,24 @@ class CheckListItemAdapter(
 
         // observablelistのリスナーに変更イベント登録。
         data.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableArrayList<AnxietyModel>>(){
-            override fun onChanged(sender: ObservableArrayList<AnxietyModel>?) {}
+            override fun onChanged(sender: ObservableArrayList<AnxietyModel>?) {
+            }
 
-            override fun onItemRangeChanged(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {}
+            override fun onItemRangeChanged(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
+            }
 
             //addだとここしかよばれんわ。
             override fun onItemRangeInserted(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
                 notifyDataSetChanged()
             }
 
-            override fun onItemRangeMoved(sender: ObservableArrayList<AnxietyModel>?, fromPosition: Int, toPosition: Int, itemCount: Int) {}
+            override fun onItemRangeMoved(sender: ObservableArrayList<AnxietyModel>?, fromPosition: Int, toPosition: Int, itemCount: Int) {
+            }
 
-            override fun onItemRangeRemoved(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {}
+            //削除時はこれ
+            override fun onItemRangeRemoved(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
+                notifyDataSetChanged()
+            }
         })
     }
 
@@ -48,8 +54,12 @@ class CheckListItemAdapter(
         with(binding) {
 
             item = data[position]
-            handler = CheckListItemHandler()
-            // Bindingオブジェクトに即反映
+
+            // 削除ボタンのイベント設定
+            checklistItemButton.setOnClickListener(View.OnClickListener {
+                data.removeAt(position)
+            })
+
             executePendingBindings()
         }
 

@@ -35,7 +35,6 @@ class CheckListViewModel() : ViewModel() {
 
     // fragment_checklist　floating action button clicked.
     fun onFABClick(){
-        //do なにか
         val anxiety = AnxietyModel("hoge", LocalDateTime.now(), LocalDateTime.now(), false)
         anxietyList.add(anxiety)
     }

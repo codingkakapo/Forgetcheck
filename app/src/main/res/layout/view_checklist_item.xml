@@ -2,7 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="item" type="jp.codingkakapo.forgetcheck.model.AnxietyModel"/>
-        <variable name="handler" type="jp.codingkakapo.forgetcheck.utils.CheckListItemHandler"/>
     </data>
     <LinearLayout
         android:id="@+id/checklist_item_linear_layout"
@@ -22,7 +21,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="削除"
-            android:onClick='@{() -> handler.onClickRemoveButton()}'
             />
     </LinearLayout>
 </layout>
