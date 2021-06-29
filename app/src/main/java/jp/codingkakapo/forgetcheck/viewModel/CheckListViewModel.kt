@@ -3,6 +3,8 @@ package jp.codingkakapo.forgetcheck.viewModel
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
@@ -10,11 +12,11 @@ import jp.codingkakapo.forgetcheck.utils.Const
 import java.time.LocalDateTime
 
 class CheckListViewModel() : ViewModel() {
-    lateinit var anxietyList : List<AnxietyModel>
+    lateinit var anxietyList : ObservableArrayList<AnxietyModel>
         //MutableLiveData<List<AnxietyModel>>()
 
     init{
-        anxietyList = getTestData()
+        anxietyList = ObservableArrayList<AnxietyModel>()
     }
 
     var hoge : String = "CheckListViewModel.プロパティほげ"
@@ -34,7 +36,8 @@ class CheckListViewModel() : ViewModel() {
     // fragment_checklist　floating action button clicked.
     fun onFABClick(){
         //do なにか
-        Log.d(Const.d,"CheckListViewModel.onClick()だよ")
+        val anxiety = AnxietyModel("hoge", LocalDateTime.now(), LocalDateTime.now(), false)
+        anxietyList.add(anxiety)
     }
 }
 
