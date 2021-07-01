@@ -1,4 +1,4 @@
-package jp.codingkakapo.forgetcheck.repository
+package jp.codingkakapo.forgetcheck.model
 
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
 
