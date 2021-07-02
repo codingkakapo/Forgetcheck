@@ -1,4 +1,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="vm"
+            type="jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel" />
+    </data>
+
     <LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,18 +14,30 @@
         android:orientation="vertical">
 
     <TextView
+        android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="fragment_edit_item!"
-        android:textColor="@color/white"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="edittext!!!!!!!1"
         android:textSize="28dp"
-        android:textColor="@color/white"
-        />
+        android:textColor="@color/white"/>
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{vm.hogeText}"
+            android:textSize="28dp"
+            android:textColor="@color/white"
+            />
+        <EditText
+            android:id="@+id/edit_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="フォーカステスト用EditText"
+            android:textSize="28dp"
+            android:textColor="@color/white"
+            />
     <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="とうろく"

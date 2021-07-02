@@ -15,7 +15,7 @@ import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
 
-    private val _vm = CheckListViewModel()
+    private val vm = CheckListViewModel()
     private lateinit var binding : FragmentChecklistBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,7 @@ class CheckListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChecklistBinding.inflate(inflater, container, false)
-        binding.vm = _vm
+        binding.vm = vm
         return binding.root
     }
 
@@ -35,19 +35,15 @@ class CheckListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // ListViewにAdapterをセット
-        val lvm = binding.vm
+        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList)
 
-        if (lvm != null) {
-            binding.itemList.adapter = CheckListItemAdapter(lvm.anxietyList)
-            //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
-            lvm.fabClickEvent.observe(viewLifecycleOwner, Observer {
-                val transaction = parentFragmentManager.beginTransaction()
-                transaction.replace(this.id,EditItemFragment()) //IDこれでええんか。。。？
-                transaction.addToBackStack(null)
-                transaction.commit()
-            })
-        }
-
+        //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
+        vm.fabClickEvent.observe(viewLifecycleOwner, Observer {
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(this.id,EditItemFragment()) //IDこれでええんか。。。？
+            transaction.addToBackStack(null)
+            transaction.commit()
+        })
     }
 }
 
