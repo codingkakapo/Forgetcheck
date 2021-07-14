@@ -1,6 +1,7 @@
 package jp.codingkakapo.forgetcheck.viewModel
 
 import android.app.Application
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.*
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
@@ -9,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
-class EditItemViewModel(app : ForgetCheckApplication) : AndroidViewModel(app) {
+class EditItemViewModel(app : ForgetCheckApplication, var anxietyList: ObservableArrayList<AnxietyModel>) : AndroidViewModel(app) {
 
     val hogeText : MutableLiveData<String> by lazy {
         MutableLiveData<String>("HELLO WORLD")
@@ -31,10 +32,14 @@ class EditItemViewModel(app : ForgetCheckApplication) : AndroidViewModel(app) {
     }
 
     private suspend fun insertAnxieties(app : ForgetCheckApplication, text : String){
+        val newAnxiety = AnxietyModel(0, text, LocalDateTime.now(), LocalDateTime.now(), false)
+
+        // 画面に追加
+        anxietyList.add(newAnxiety)
+
+        // DBに追加
          withContext(Dispatchers.IO){
-             app.DB.AnxietyDao().insert(
-                 AnxietyModel(0, text, LocalDateTime.now(), LocalDateTime.now(), false)
-             )
+             app.DB.AnxietyDao().insert(newAnxiety)
          }
     }
 }

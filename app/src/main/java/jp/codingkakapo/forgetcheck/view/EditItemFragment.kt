@@ -8,16 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.databinding.ObservableArrayList
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
 import jp.codingkakapo.forgetcheck.databinding.FragmentEditItemBinding
+import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel
 
-class EditItemFragment : Fragment() {
+class EditItemFragment(var anxietyList: ObservableArrayList<AnxietyModel>) : Fragment() {
 
     private lateinit var vm : EditItemViewModel
     private lateinit var binding : FragmentEditItemBinding
+
+    init {
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +34,7 @@ class EditItemFragment : Fragment() {
     ): View {
 
         //VMいれる
-        vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication)
+        vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList)
 
         // binding初期化
         binding = FragmentEditItemBinding.inflate(inflater, container, false)

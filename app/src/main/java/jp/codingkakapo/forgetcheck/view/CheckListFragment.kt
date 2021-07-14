@@ -50,7 +50,7 @@ class CheckListFragment : Fragment() {
         //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
         vm.fabClickEvent.observe(viewLifecycleOwner, {
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(this.id,EditItemFragment()) //IDこれでええんか。。。？
+            transaction.replace(this.id,EditItemFragment(this.vm.anxietyList)) //IDこれでええんか。。。？
             transaction.addToBackStack(null)
             transaction.commit()
         })
