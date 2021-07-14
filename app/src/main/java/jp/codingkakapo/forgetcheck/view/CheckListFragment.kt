@@ -45,7 +45,7 @@ class CheckListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // ListViewにAdapterをセット
-        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList)
+        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, this.context?.applicationContext as ForgetCheckApplication)
 
         //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
         vm.fabClickEvent.observe(viewLifecycleOwner, {

@@ -10,11 +10,14 @@ import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
+import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.databinding.ViewChecklistItemBinding
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import kotlinx.coroutines.*
 
 class CheckListItemAdapter(
-    private var data: ObservableArrayList<AnxietyModel>
+    private var data: ObservableArrayList<AnxietyModel>,
+    var app : ForgetCheckApplication
 ) : BaseAdapter()  {
 
     init{
@@ -57,6 +60,12 @@ class CheckListItemAdapter(
 
             // 削除ボタンのイベント設定
             checklistItemButton.setOnClickListener(View.OnClickListener {
+                //DBから削除
+                val removeObj = data[position]
+                GlobalScope.launch {
+                    deleteAnxiety(removeObj)
+                }
+                //画面から削除
                 data.removeAt(position)
             })
 
@@ -68,6 +77,12 @@ class CheckListItemAdapter(
 
     fun replaceData(listData: ObservableArrayList<AnxietyModel>) {
         this.data = listData
+    }
+
+    private suspend fun deleteAnxiety(removeObj : AnxietyModel){
+        withContext(Dispatchers.IO){
+            app.DB.AnxietyDao().delete(removeObj)
+        }
     }
 
     override fun getItem(position: Int) = data[position]
