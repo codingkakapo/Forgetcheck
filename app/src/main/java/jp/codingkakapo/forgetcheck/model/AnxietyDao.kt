@@ -1,10 +1,20 @@
 package jp.codingkakapo.forgetcheck.model
 
-import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
-class AnxietyDao ( model: AnxietyModel ) {
-    // TD
-    fun save() : String = ""
-    // TD
-    fun load() : String = ""
+@Dao
+interface AnxietyDao {
+
+    @Query("select * from anxieties")
+    fun selectAll() : List<AnxietyModel>
+
+    @Insert
+    fun insert(anxiety: AnxietyModel)
+
+    @Delete
+    fun delete(anxiety: AnxietyModel)
+
+    @Update
+    fun update(anxiety: AnxietyModel)
 }

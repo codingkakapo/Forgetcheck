@@ -26,6 +26,8 @@
             android:layout_height="wrap_content"
             android:text="@{vm.hogeText}"
             android:textSize="28dp"
+            android:hint="ここにテキストをいれる"
+            android:inputType="text"
             android:textColor="@color/white"
             />
         <EditText
