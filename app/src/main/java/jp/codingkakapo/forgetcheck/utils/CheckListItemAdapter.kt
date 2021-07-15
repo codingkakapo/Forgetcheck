@@ -1,5 +1,6 @@
 package jp.codingkakapo.forgetcheck.utils
 
+import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,13 @@ import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
+import androidx.fragment.app.FragmentActivity
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
+import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.ViewChecklistItemBinding
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import jp.codingkakapo.forgetcheck.view.EditItemFragment
+import jp.codingkakapo.forgetcheck.view.MainActivity
 import kotlinx.coroutines.*
 
 class CheckListItemAdapter(
@@ -25,22 +30,27 @@ class CheckListItemAdapter(
         // observablelistのリスナーに変更イベント登録。
         data.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableArrayList<AnxietyModel>>(){
             override fun onChanged(sender: ObservableArrayList<AnxietyModel>?) {
+                //Log.d(Const.d,"onChanged")
             }
 
             override fun onItemRangeChanged(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
+                //Log.d(Const.d,"onItemRangeChanged")
             }
 
             //addだとここしかよばれんわ。
             override fun onItemRangeInserted(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
                 notifyDataSetChanged()
+                //Log.d(Const.d,"onItemRangeInserted")
             }
 
             override fun onItemRangeMoved(sender: ObservableArrayList<AnxietyModel>?, fromPosition: Int, toPosition: Int, itemCount: Int) {
+                //Log.d(Const.d,"onItemRangeMoved")
             }
 
             //削除時はこれ
             override fun onItemRangeRemoved(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
                 notifyDataSetChanged()
+                //Log.d(Const.d,"onItemRangeRemoved")
             }
         })
     }
@@ -57,6 +67,18 @@ class CheckListItemAdapter(
         with(binding) {
 
             item = data[position]
+
+            // テキストクリック時のイベント設定
+            checklistItemTextview.setOnClickListener {
+                val updateObj = data[position]
+
+                //Update用画面遷移
+                val mainActivity = ((binding.root.context as Activity) as MainActivity)
+                val tran = mainActivity.supportFragmentManager.beginTransaction()
+                tran.replace(R.id.check_list_fragment, EditItemFragment(data, updateObj))
+                tran.addToBackStack(null)
+                tran.commit()
+            }
 
             // 削除ボタンのイベント設定
             checklistItemButton.setOnClickListener(View.OnClickListener {
@@ -75,14 +97,15 @@ class CheckListItemAdapter(
         return binding.root
     }
 
-    fun replaceData(listData: ObservableArrayList<AnxietyModel>) {
-        this.data = listData
-    }
-
     private suspend fun deleteAnxiety(removeObj : AnxietyModel){
         withContext(Dispatchers.IO){
             app.DB.AnxietyDao().delete(removeObj)
         }
+    }
+
+    fun replaceData(listData: ObservableArrayList<AnxietyModel>) {
+        Log.d(Const.d,"replaceData")
+        this.data = listData
     }
 
     override fun getItem(position: Int) = data[position]

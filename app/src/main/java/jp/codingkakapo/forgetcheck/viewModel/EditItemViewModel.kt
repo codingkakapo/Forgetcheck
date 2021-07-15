@@ -10,7 +10,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
-class EditItemViewModel(app : ForgetCheckApplication, var anxietyList: ObservableArrayList<AnxietyModel>) : AndroidViewModel(app) {
+class EditItemViewModel(
+    app : ForgetCheckApplication,
+    var anxietyList: ObservableArrayList<AnxietyModel>,
+    var anxiety : AnxietyModel? = null) : AndroidViewModel(app) {
 
     val hogeText : MutableLiveData<String> by lazy {
         MutableLiveData<String>("HELLO WORLD")
@@ -25,9 +28,10 @@ class EditItemViewModel(app : ForgetCheckApplication, var anxietyList: Observabl
 
         // 変更時イベント、　DBにInsert
         updatedStrings.observeForever {
-            viewModelScope.launch {
-                insertAnxieties(app,it)
-            }
+            // anxietyが空なら、新規作成
+            // 入ってれば、そのanxietyを更新
+            if(anxiety == null) viewModelScope.launch { insertAnxieties(app,it) }
+            else viewModelScope.launch { updateAnxieties(app, anxiety , it) }
         }
     }
 
@@ -41,5 +45,17 @@ class EditItemViewModel(app : ForgetCheckApplication, var anxietyList: Observabl
          withContext(Dispatchers.IO){
              app.DB.AnxietyDao().insert(newAnxiety)
          }
+    }
+
+    // ToDo EditTextの文字更新時はもとのやつ出す
+    private suspend fun updateAnxieties(app : ForgetCheckApplication, updateTarget : AnxietyModel?, newStr : String){
+        if(updateTarget == null) throw Exception()
+
+        updateTarget.name = newStr
+
+        withContext(Dispatchers.IO){
+            // DBを更新
+            app.DB.AnxietyDao().update(updateTarget)
+        }
     }
 }

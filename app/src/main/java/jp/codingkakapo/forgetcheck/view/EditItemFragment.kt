@@ -16,7 +16,8 @@ import jp.codingkakapo.forgetcheck.databinding.FragmentEditItemBinding
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel
 
-class EditItemFragment(var anxietyList: ObservableArrayList<AnxietyModel>) : Fragment() {
+// AnxietyModelを受け取った時のみ更新モードとして動作する。
+class EditItemFragment(var anxietyList: ObservableArrayList<AnxietyModel>, var anxiety : AnxietyModel? = null) : Fragment() {
 
     private lateinit var vm : EditItemViewModel
     private lateinit var binding : FragmentEditItemBinding
@@ -33,8 +34,9 @@ class EditItemFragment(var anxietyList: ObservableArrayList<AnxietyModel>) : Fra
         savedInstanceState: Bundle?
     ): View {
 
-        //VMいれる
-        vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList)
+        //VMいれる anxietyがnullなら新規登録、入ってれば更新
+        if(anxiety == null) vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList)
+        else vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList, anxiety)
 
         // binding初期化
         binding = FragmentEditItemBinding.inflate(inflater, container, false)

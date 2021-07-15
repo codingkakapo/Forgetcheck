@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 @Entity (tableName = "anxieties")
 data class AnxietyModel (
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val name : String,
+    var name : String,
     val createdAt : LocalDateTime,
     val updatedAt : LocalDateTime,
     val checked : Boolean //たぶん数字でなんとかする必要あり
