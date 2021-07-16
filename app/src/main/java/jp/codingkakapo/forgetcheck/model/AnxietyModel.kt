@@ -13,7 +13,7 @@ data class AnxietyModel (
     var name : String,
     val createdAt : LocalDateTime,
     val updatedAt : LocalDateTime,
-    val checked : Boolean //たぶん数字でなんとかする必要あり
+    var checked : Boolean //たぶん数字でなんとかする必要あり
 )
 {
     fun hoge() = ""

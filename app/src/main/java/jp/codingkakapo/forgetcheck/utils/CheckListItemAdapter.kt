@@ -81,15 +81,26 @@ class CheckListItemAdapter(
             }
 
             // 削除ボタンのイベント設定
-            checklistItemButton.setOnClickListener(View.OnClickListener {
+            checklistItemButton.setOnClickListener {
                 //DBから削除
-                val removeObj = data[position]
+                val targetAnxiety = data[position]
                 GlobalScope.launch {
-                    deleteAnxiety(removeObj)
+                    deleteAnxiety(targetAnxiety)
                 }
                 //画面から削除
                 data.removeAt(position)
-            })
+            }
+
+            // CheckBoxのイベント設定
+            checklistItemCheckbox.setOnClickListener {
+                var targetAnxiety = data[position]
+                // 真偽反転、画面に変更反映される
+                targetAnxiety.checked = !targetAnxiety.checked
+                // DB上でも変更
+                GlobalScope.launch {
+                    changeAnxietyChecked(targetAnxiety)
+                }
+            }
 
             executePendingBindings()
         }
@@ -97,9 +108,15 @@ class CheckListItemAdapter(
         return binding.root
     }
 
-    private suspend fun deleteAnxiety(removeObj : AnxietyModel){
+    private suspend fun deleteAnxiety(anxiety : AnxietyModel){
         withContext(Dispatchers.IO){
-            app.DB.AnxietyDao().delete(removeObj)
+            app.DB.AnxietyDao().delete(anxiety)
+        }
+    }
+
+    private suspend fun changeAnxietyChecked(anxiety : AnxietyModel){
+        withContext(Dispatchers.IO){
+            app.DB.AnxietyDao().update(anxiety)
         }
     }
 
