@@ -1,20 +1,13 @@
 package jp.codingkakapo.forgetcheck.view
 
-import android.app.Application
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
-import jp.codingkakapo.forgetcheck.model.ForgetCheckDB
 import jp.codingkakapo.forgetcheck.utils.CheckListItemAdapter
-import jp.codingkakapo.forgetcheck.utils.Const
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
@@ -31,12 +24,14 @@ class CheckListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
         //Contextが取れるようになってからVMをいれる
         vm = CheckListViewModel(this.context?.applicationContext as ForgetCheckApplication)
 
-        //ListViewのオブジェクト作成
+        //ListViewのオブジェクト作成 ・・・なんか冗長
         binding = FragmentChecklistBinding.inflate(inflater, container, false)
-        binding.vm = vm
+        binding.vm = this.vm
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
@@ -54,6 +49,11 @@ class CheckListFragment : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         })
+
+        //テスト用
+        /*binding.testButton.setOnClickListener{
+            vm.date.value = "おされました"
+        }*/
     }
 }
 

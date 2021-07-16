@@ -1,38 +1,62 @@
 package jp.codingkakapo.forgetcheck.viewModel
 
-import android.app.Activity
-import android.app.Application
-import android.content.Context
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableArrayList
-import androidx.databinding.ObservableList
-import androidx.lifecycle.*
-import androidx.room.Room
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
-import jp.codingkakapo.forgetcheck.utils.Const
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import java.util.*
+import kotlin.concurrent.timer
 
 class CheckListViewModel(app: ForgetCheckApplication) : AndroidViewModel(app) {
 
     var anxietyList : ObservableArrayList<AnxietyModel> = ObservableArrayList<AnxietyModel>()
 
+    var date : MutableLiveData<String> = MutableLiveData<String>()
+
+    //Boolて。Objectとかでやるべき？
+    var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
+
     init{
-        //そのままやるとUIをブロックする。。。こるーちん
+
+
+        // リスト読み込み
         viewModelScope.launch {
             anxietyList.addAll(getListContent(app))
         }
+
+        // 日付更新処理はしらせとく
+        timer(name = "testTimer", period = 10000) {
+            viewModelScope.launch {
+                updateTime(Calendar.getInstance())
+            }
+        }
     }
 
-    var hoge = ""
+    private suspend fun updateTime(calendar : Calendar){
+        val month = calendar.get(Calendar.MONTH) + 1 //Javaだと-1で出るので
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val dow = when(calendar.get(Calendar.DAY_OF_WEEK)){
+            1 -> "日"
+            2 -> "月"
+            3 -> "火"
+            4 -> "水"
+            5 -> "木"
+            6 -> "金"
+            7 -> "土"
+            else -> ""
+        }
 
-    //Boolて。Objectとかでやるべき？
-    var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData()
+        withContext(Dispatchers.Main){
+            date.value = "${month}月 ${day}日 （${dow}）"
+        }
+    }
 
     // リポジトリにするほどではない・・・たぶん　リストの中身を入れる
     private suspend fun getListContent(app : ForgetCheckApplication) : List<AnxietyModel>{
