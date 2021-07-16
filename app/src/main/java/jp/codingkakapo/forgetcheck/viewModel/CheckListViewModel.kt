@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.concurrent.timer
 
-class CheckListViewModel(app: ForgetCheckApplication) : AndroidViewModel(app) {
+class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app) {
 
     var anxietyList : ObservableArrayList<AnxietyModel> = ObservableArrayList<AnxietyModel>()
 
@@ -21,6 +21,7 @@ class CheckListViewModel(app: ForgetCheckApplication) : AndroidViewModel(app) {
 
     //Boolて。Objectとかでやるべき？
     var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var resetButtonClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     init{
@@ -77,8 +78,31 @@ class CheckListViewModel(app: ForgetCheckApplication) : AndroidViewModel(app) {
         )
     }
 
+    // 全部のチェックを解除する
+    fun uncheckAllAnxieties(){
+        for(anxiety in anxietyList){
+            anxiety.checked = false
+            viewModelScope.launch {
+                changeAnxietyChecked(anxiety)
+            }
+        }
+    }
+
     // fragment_checklist　floating action button clicked.
     fun onFABClick(){
         fabClickEvent.value = true
     }
+
+    // リセットボタンクリック
+    fun onResetButtonClick(){
+        resetButtonClickEvent.value = true
+    }
+
+    // Adapterのやつと合併してどうにかしたい、冗長。
+    private suspend fun changeAnxietyChecked(anxiety : AnxietyModel){
+        withContext(Dispatchers.IO){
+            app.DB.AnxietyDao().update(anxiety)
+        }
+    }
+
 }

@@ -1,13 +1,18 @@
 package jp.codingkakapo.forgetcheck.view
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
+import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
 import jp.codingkakapo.forgetcheck.utils.CheckListItemAdapter
+import jp.codingkakapo.forgetcheck.utils.Const
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
@@ -40,7 +45,7 @@ class CheckListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // ListViewにAdapterをセット
-        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, this.context?.applicationContext as ForgetCheckApplication)
+        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
 
         //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
         vm.fabClickEvent.observe(viewLifecycleOwner, {
@@ -50,10 +55,41 @@ class CheckListFragment : Fragment() {
             transaction.commit()
         })
 
+        // リセットボタンの処理
+        vm.resetButtonClickEvent.observe(viewLifecycleOwner,{
+            val alertDialog: AlertDialog? = activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setPositiveButton(R.string.ok
+                    ) { dialog, id ->
+                        // User clicked OK button
+                        Log.d(Const.d,"ok clicked")
+                        vm.uncheckAllAnxieties()
+                        //なんかいけてねーな。。
+                        (binding.itemList.adapter as CheckListItemAdapter).notifyDataSetChanged()
+                    }
+                    setNegativeButton(
+                        R.string.cancel
+                    ) { dialog, id ->
+                        // User cancelled the dialog
+                        Log.d(Const.d,"cancel clicked")
+                    }
+                }
+                // Set other dialog properties
+                builder.setMessage(R.string.uncheck_message)
+
+                // Create the AlertDialog
+                builder.create()
+            }
+            alertDialog?.show()
+        })
+
         //テスト用
         /*binding.testButton.setOnClickListener{
             vm.date.value = "おされました"
         }*/
+
+
     }
 }
 

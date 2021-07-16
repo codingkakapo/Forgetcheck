@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LifecycleOwner
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.ViewChecklistItemBinding
@@ -22,7 +23,8 @@ import kotlinx.coroutines.*
 
 class CheckListItemAdapter(
     private var data: ObservableArrayList<AnxietyModel>,
-    var app : ForgetCheckApplication
+    var app : ForgetCheckApplication,
+    private val parentLifecycleOwner: LifecycleOwner
 ) : BaseAdapter()  {
 
     init{
@@ -30,27 +32,27 @@ class CheckListItemAdapter(
         // observablelistのリスナーに変更イベント登録。
         data.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableArrayList<AnxietyModel>>(){
             override fun onChanged(sender: ObservableArrayList<AnxietyModel>?) {
-                //Log.d(Const.d,"onChanged")
+                Log.d(Const.d,"onChanged")
             }
 
             override fun onItemRangeChanged(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
-                //Log.d(Const.d,"onItemRangeChanged")
+                Log.d(Const.d,"onItemRangeChanged")
             }
 
             //addだとここしかよばれんわ。
             override fun onItemRangeInserted(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
                 notifyDataSetChanged()
-                //Log.d(Const.d,"onItemRangeInserted")
+                Log.d(Const.d,"onItemRangeInserted")
             }
 
             override fun onItemRangeMoved(sender: ObservableArrayList<AnxietyModel>?, fromPosition: Int, toPosition: Int, itemCount: Int) {
-                //Log.d(Const.d,"onItemRangeMoved")
+                Log.d(Const.d,"onItemRangeMoved")
             }
 
             //削除時はこれ
             override fun onItemRangeRemoved(sender: ObservableArrayList<AnxietyModel>?, positionStart: Int, itemCount: Int) {
                 notifyDataSetChanged()
-                //Log.d(Const.d,"onItemRangeRemoved")
+                Log.d(Const.d,"onItemRangeRemoved")
             }
         })
     }
@@ -65,6 +67,8 @@ class CheckListItemAdapter(
         }
 
         with(binding) {
+
+            binding.lifecycleOwner = parentLifecycleOwner
 
             item = data[position]
 
