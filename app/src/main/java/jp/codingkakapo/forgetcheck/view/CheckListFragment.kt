@@ -65,8 +65,6 @@ class CheckListFragment : Fragment() {
                         // User clicked OK button
                         Log.d(Const.d,"ok clicked")
                         vm.uncheckAllAnxieties()
-                        //なんかいけてねーな。。
-                        (binding.itemList.adapter as CheckListItemAdapter).notifyDataSetChanged()
                     }
                     setNegativeButton(
                         R.string.cancel
@@ -82,6 +80,11 @@ class CheckListFragment : Fragment() {
                 builder.create()
             }
             alertDialog?.show()
+        })
+
+        // ViewModel側からデータセット変更されたとき画面を更新
+        vm.dataSetChangedEvent.observe(viewLifecycleOwner, {
+            (binding.itemList.adapter as CheckListItemAdapter).notifyDataSetChanged()
         })
 
         //テスト用

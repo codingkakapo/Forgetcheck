@@ -6,26 +6,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import jp.codingkakapo.forgetcheck.model.AppDataModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.concurrent.timer
 
 class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app) {
 
     var anxietyList : ObservableArrayList<AnxietyModel> = ObservableArrayList<AnxietyModel>()
-
     var date : MutableLiveData<String> = MutableLiveData<String>()
-
-    //Boolて。Objectとかでやるべき？
     var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var resetButtonClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var dataSetChangedEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     init{
-
+        // 前回起動から1日経っていたらAnxietyのCheckを全て外す
+        viewModelScope.launch {
+            if(judgeReset(checkLastLaunched())) uncheckAllAnxieties()
+        }
 
         // リスト読み込み
         viewModelScope.launch {
@@ -33,11 +36,37 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         }
 
         // 日付更新処理はしらせとく
-        timer(name = "testTimer", period = 10000) {
+        timer(name = "forgetCheckTimer", period = 10000) {
             viewModelScope.launch {
                 updateTime(Calendar.getInstance())
             }
         }
+    }
+
+    // 最後の起動を確認、なければ今回を最終起動として保存。
+    private suspend fun checkLastLaunched() : LocalDateTime {
+        val lastLaunched : LocalDateTime
+        val dat : AppDataModel?
+        val now = LocalDateTime.now()
+        withContext(Dispatchers.IO){
+            dat = app.DB.AppDataDao().selectAll().firstOrNull()
+        }
+        // データがあるか確認
+        if(dat == null){
+            lastLaunched = now
+            // なければDBに作成
+            withContext(Dispatchers.IO){
+                app.DB.AppDataDao().insert(AppDataModel(0, now))
+            }
+        } else {
+            //　DBの最終起動を更新
+            lastLaunched = dat.lastLaunched
+            dat.lastLaunched = now
+            withContext(Dispatchers.IO){
+                app.DB.AppDataDao().update(dat)
+            }
+        }
+        return lastLaunched
     }
 
     private suspend fun updateTime(calendar : Calendar){
@@ -59,23 +88,20 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         }
     }
 
-    // リポジトリにするほどではない・・・たぶん　リストの中身を入れる
+    // リストの中身を入れる
     private suspend fun getListContent(app : ForgetCheckApplication) : List<AnxietyModel>{
         return withContext(Dispatchers.IO){
             app.DB.AnxietyDao().selectAll()
         }
     }
 
-    // 表示テスト用のリスト
-    private fun getTestData() : List<AnxietyModel>{
+    // 最終起動から1日以上経っているかの判断 now - last が1d以上ならリセット
+    private fun judgeReset(last : LocalDateTime) : Boolean {
         val now = LocalDateTime.now()
-         return listOf<AnxietyModel>(
-            AnxietyModel(1,"hoge1", now, now, false),
-            AnxietyModel(2,"hoge2", now, now, false),
-            AnxietyModel(3,"hoge3", now, now, false),
-            AnxietyModel(4,"hoge4", now, now, false),
-            AnxietyModel(5,"hoge5", now, now, false)
-        )
+        val diffYears = ChronoUnit.YEARS.between(now, last)
+        val diffMonths = ChronoUnit.MONTHS.between(now,last)
+        val diffDays = ChronoUnit.DAYS.between(now,last)
+        return diffYears > 1 || diffMonths > 1 || diffDays > 1
     }
 
     // 全部のチェックを解除する
@@ -88,21 +114,23 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         }
     }
 
-    // fragment_checklist　floating action button clicked.
+    // フローティングアクションボタンクリックイベント、View側でObserve
     fun onFABClick(){
         fabClickEvent.value = true
     }
 
-    // リセットボタンクリック
+    // リセットボタンクリックイベント、View側でObserve
     fun onResetButtonClick(){
         resetButtonClickEvent.value = true
     }
 
-    // Adapterのやつと合併してどうにかしたい、冗長。
+    // ToDo　Adapterのやつと合併してどうにかしたい、冗長。
     private suspend fun changeAnxietyChecked(anxiety : AnxietyModel){
         withContext(Dispatchers.IO){
             app.DB.AnxietyDao().update(anxiety)
         }
+        // 画面側に反映する必要あるので呼ぶ、ObserveしてるFrag上でNotifyが呼ばれて画面更新
+        dataSetChangedEvent.value = true
     }
 
 }

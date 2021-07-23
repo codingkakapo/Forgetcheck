@@ -6,14 +6,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import jp.codingkakapo.forgetcheck.utils.TypeConverter
 import java.lang.Exception
 
-@Database(entities = arrayOf(AnxietyModel::class), version = 1, exportSchema = false)
+@Database(entities = [AnxietyModel::class, AppDataModel::class], version = 2, exportSchema = false)
 @TypeConverters(TypeConverter::class)
 abstract class ForgetCheckDB() : RoomDatabase() {
 
     abstract fun AnxietyDao() : AnxietyDao
+
+    abstract fun AppDataDao() : AppDataDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -29,12 +33,18 @@ abstract class ForgetCheckDB() : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ForgetCheckDB::class.java,
-                    "word_database"
+                    "forget_check_database"
                 ).build()
                 INSTANCE = instance
                 // return instance
                 instance
             }
+        }
+    }
+
+    val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE appdata ( id INTEGER PRIMARY KEY AUTOINCREMENT, lastLaunched LONG );")
         }
     }
 

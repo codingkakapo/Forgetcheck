@@ -22,6 +22,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="28sp"/>
+        <TextView
+            android:id="@+id/checklist_item_time"
+            android:text="@{item.createdAt.toString()}"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="10sp"/>
         <Button
             android:id="@+id/checklist_item_button"
             android:layout_width="wrap_content"

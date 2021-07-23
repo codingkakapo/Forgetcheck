@@ -2,17 +2,17 @@ package jp.codingkakapo.forgetcheck.utils
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class TypeConverter {
 
-    // ToDo 仮実装　あとでまともに作れ
     @TypeConverter
     fun fromDateTime(time : LocalDateTime) : Long {
-        return 0
+        return time.toEpochSecond(ZoneOffset.UTC)
     }
 
     @TypeConverter
     fun toDateTime(value : Long) : LocalDateTime {
-        return LocalDateTime.now()
+        return LocalDateTime.ofEpochSecond(value, 0, ZoneOffset.UTC)
     }
 }
