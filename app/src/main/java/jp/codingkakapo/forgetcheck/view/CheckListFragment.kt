@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
@@ -17,7 +19,7 @@ import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
 
-    lateinit var vm : CheckListViewModel
+    val vm : CheckListViewModel by activityViewModels()
     lateinit var binding : FragmentChecklistBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +33,8 @@ class CheckListFragment : Fragment() {
 
 
         //Contextが取れるようになってからVMをいれる
-        vm = CheckListViewModel(this.context?.applicationContext as ForgetCheckApplication)
+        // ToDo VMのカスタムプロバイダ→Initialize
+        //vm = CheckListViewModel(this.context?.applicationContext as ForgetCheckApplication)
 
         //ListViewのオブジェクト作成 ・・・なんか冗長
         binding = FragmentChecklistBinding.inflate(inflater, container, false)
@@ -50,7 +53,9 @@ class CheckListFragment : Fragment() {
         //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
         vm.fabClickEvent.observe(viewLifecycleOwner, {
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(this.id,EditItemFragment(this.vm.anxietyList)) //IDこれでええんか。。。？
+            // ToDo 新規登録処理修正
+            //transaction.replace(this.id,EditItemFragment(this.vm.anxietyList)) //IDこれでええんか。。。？
+            transaction.replace(this.id, EditItemFragment())
             transaction.addToBackStack(null)
             transaction.commit()
         })
@@ -86,12 +91,6 @@ class CheckListFragment : Fragment() {
         vm.dataSetChangedEvent.observe(viewLifecycleOwner, {
             (binding.itemList.adapter as CheckListItemAdapter).notifyDataSetChanged()
         })
-
-        //テスト用
-        /*binding.testButton.setOnClickListener{
-            vm.date.value = "おされました"
-        }*/
-
 
     }
 }

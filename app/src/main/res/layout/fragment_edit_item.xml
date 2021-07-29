@@ -1,17 +1,17 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="vm"
-            type="jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel" />
+            type="jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel" />
     </data>
 
     <LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_500"
-        tools:context="jp.codingkakapo.forgetcheck.view.EditItemFragment"
-        android:orientation="vertical">
+    tools:context="jp.codingkakapo.forgetcheck.view.EditItemFragment"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_view"
@@ -24,7 +24,6 @@
             android:id="@+id/edit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{vm.hogeText}"
             android:textSize="28dp"
             android:hint="ここにテキストをいれる"
             android:inputType="text"

@@ -17,6 +17,7 @@ import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.ViewChecklistItemBinding
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
+import jp.codingkakapo.forgetcheck.view.CheckListFragment
 import jp.codingkakapo.forgetcheck.view.EditItemFragment
 import jp.codingkakapo.forgetcheck.view.MainActivity
 import kotlinx.coroutines.*
@@ -79,7 +80,9 @@ class CheckListItemAdapter(
                 //Update用画面遷移
                 val mainActivity = ((binding.root.context as Activity) as MainActivity)
                 val tran = mainActivity.supportFragmentManager.beginTransaction()
-                tran.replace(R.id.check_list_fragment, EditItemFragment(data, updateObj))
+                // ToDo 編集（更新）実装
+                //tran.replace(R.id.check_list_fragment, EditItemFragment(data, updateObj))
+                tran.replace(R.id.check_list_fragment, EditItemFragment())
                 tran.addToBackStack(null)
                 tran.commit()
             }

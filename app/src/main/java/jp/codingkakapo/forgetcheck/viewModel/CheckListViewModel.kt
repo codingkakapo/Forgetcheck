@@ -1,9 +1,8 @@
 package jp.codingkakapo.forgetcheck.viewModel
 
+import android.content.Context
 import androidx.databinding.ObservableArrayList
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.model.AppDataModel
@@ -16,15 +15,26 @@ import java.util.*
 import kotlin.concurrent.timer
 
 class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app) {
+    class Factory constructor(private val app: ForgetCheckApplication): ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return CheckListViewModel(this.app) as T
+        }
+    }
 
     var anxietyList : ObservableArrayList<AnxietyModel> = ObservableArrayList<AnxietyModel>()
     var date : MutableLiveData<String> = MutableLiveData<String>()
+    var editTargetAnxiety : AnxietyModel? = null
+    var editUpdatedString : MutableLiveData<String> = MutableLiveData<String>()
     var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var resetButtonClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var dataSetChangedEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 
     init{
+
+        // ToDo　Edit内容の反映処理をObserveで書く、新規と変更の区別を考える（UpdatedStringを監視）
+
         // 前回起動から1日経っていたらAnxietyのCheckを全て外す
         viewModelScope.launch {
             if(judgeReset(checkLastLaunched())) uncheckAllAnxieties()
@@ -113,6 +123,32 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
             }
         }
     }
+
+    // ToDo 移動したので合わせて修正すること。新規登録処理
+    private suspend fun insertAnxieties(app : ForgetCheckApplication, text : String){
+        val newAnxiety = AnxietyModel(0, text, LocalDateTime.now(), LocalDateTime.now(), false)
+
+        // 画面に追加
+        anxietyList.add(newAnxiety)
+
+        // DBに追加
+        withContext(Dispatchers.IO){
+            app.DB.AnxietyDao().insert(newAnxiety)
+        }
+    }
+
+    // ToDo EditTextの文字更新時はもとのやつ出す　こちらも修正必要　編集処理
+    private suspend fun updateAnxieties(app : ForgetCheckApplication, updateTarget : AnxietyModel?, newStr : String){
+        if(updateTarget == null) throw Exception()
+
+        updateTarget.name = newStr
+
+        withContext(Dispatchers.IO){
+            // DBを更新
+            app.DB.AnxietyDao().update(updateTarget)
+        }
+    }
+
 
     // フローティングアクションボタンクリックイベント、View側でObserve
     fun onFABClick(){
