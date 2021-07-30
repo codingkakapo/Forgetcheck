@@ -1,7 +1,6 @@
 package jp.codingkakapo.forgetcheck.view
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
 import jp.codingkakapo.forgetcheck.utils.CheckListItemAdapter
 import jp.codingkakapo.forgetcheck.utils.Const
+import jp.codingkakapo.forgetcheck.utils.observeSingle
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class CheckListFragment : Fragment() {
@@ -24,17 +25,14 @@ class CheckListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Log.d("*****************CheckListFragment***************", "onCreate")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
-        //Contextが取れるようになってからVMをいれる
-        // ToDo VMのカスタムプロバイダ→Initialize
-        //vm = CheckListViewModel(this.context?.applicationContext as ForgetCheckApplication)
+        //Log.d("*****************CheckListFragment***************", "onCreateView")
 
         //ListViewのオブジェクト作成 ・・・なんか冗長
         binding = FragmentChecklistBinding.inflate(inflater, container, false)
@@ -46,22 +44,23 @@ class CheckListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        //Log.d("*****************CheckListFragment***************", "onActivityCreated")
 
         // ListViewにAdapterをセット
         binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
 
-        //fabがClickされる→バインドされたVMのメソッドはしる→VMのイベントLivedataが変更される→それを観測する処理の登録（これ）
-        vm.fabClickEvent.observe(viewLifecycleOwner, {
-            val transaction = parentFragmentManager.beginTransaction()
-            // ToDo 新規登録処理修正
-            //transaction.replace(this.id,EditItemFragment(this.vm.anxietyList)) //IDこれでええんか。。。？
-            transaction.replace(this.id, EditItemFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
-        })
+        // イベントが発火し続けないよう拡張（observeSingle）を使用
+        // ToDo 新規登録処理修正
+        vm.fabClickEvent.observeSingle(viewLifecycleOwner){
+            val id = this.id
+            parentFragmentManager.commit {
+                replace<EditItemFragment>(id)
+                addToBackStack(null)
+            }
+        }
 
         // リセットボタンの処理
-        vm.resetButtonClickEvent.observe(viewLifecycleOwner,{
+        vm.resetButtonClickEvent.observeSingle(viewLifecycleOwner){
             val alertDialog: AlertDialog? = activity?.let {
                 val builder = AlertDialog.Builder(it)
                 builder.apply {
@@ -85,7 +84,7 @@ class CheckListFragment : Fragment() {
                 builder.create()
             }
             alertDialog?.show()
-        })
+        }
 
         // ViewModel側からデータセット変更されたとき画面を更新
         vm.dataSetChangedEvent.observe(viewLifecycleOwner, {
@@ -93,5 +92,56 @@ class CheckListFragment : Fragment() {
         })
 
     }
+
+
+    /*override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.d("*****************CheckListFragment***************", "onAttach")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("*****************CheckListFragment***************", "onDetach")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("*****************CheckListFragment***************", "onViewCreated")
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        Log.d("*****************CheckListFragment***************", "onViewStateRestored")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("*****************CheckListFragment***************", "onStart")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("*****************CheckListFragment***************", "onStop")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("*****************CheckListFragment***************", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("*****************CheckListFragment***************", "onPause")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("*****************CheckListFragment***************", "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("*****************CheckListFragment***************", "onDestroy")
+    }*/
 }
 

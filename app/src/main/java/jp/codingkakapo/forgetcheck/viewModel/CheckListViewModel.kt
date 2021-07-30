@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.model.AppDataModel
+import jp.codingkakapo.forgetcheck.utils.singleLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,8 +27,8 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     var date : MutableLiveData<String> = MutableLiveData<String>()
     var editTargetAnxiety : AnxietyModel? = null
     var editUpdatedString : MutableLiveData<String> = MutableLiveData<String>()
-    var fabClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    var resetButtonClickEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var fabClickEvent = singleLiveData<Boolean>()
+    var resetButtonClickEvent = singleLiveData<Boolean>()
     var dataSetChangedEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
 

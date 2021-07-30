@@ -1,10 +1,11 @@
 ISSUE
-・画面回転時の対応（Livedata化？）
-・EditのVMいっぱいできちゃわない？
+・全LiveData系のsingle化？イベントだけでいいのか？調査
+OK・画面回転時の対応（Livedata化？）
+OK・EditのVMいっぱいできちゃわない？
     →VMの廃棄処理とか、Observerの解除とか。。。
-＠＠＠・Editで画面回転すると落ちる
+OK・Editで画面回転すると落ちる
 ・ObservableListでいいの？
-・EditのFrag破棄時、VMも破棄したい
+OK・EditのFrag破棄時、VMも破棄したい
 ・更新時元の文字出す
 ・見た目なんとかする
 ・余白部分とか文字クリックは、全部チェック動作にする
@@ -20,6 +21,8 @@ ISSUE
     →シングルトンしないとじゃね
 ・Edit後、EditのFragは閉じてしまえば？いる？
 ・自動リセットが効かない
+・手動リセットダイアログ展開時、回転でリーク発生
+・Insert,Updateの復旧
 OK・DB作成前にSelectが走るのはまずい
 OK・まともにTypeConverter書く
 OK・日付まわりまともに書く
@@ -71,6 +74,8 @@ MILESTONE
 ・来週中（~7/23）にリリース😂
 あとはISSUEとかUI系とか。大枠はほぼできた。
 
+・ブヒー、八月になってまう
+エラー出過ぎ、ISSUE増えすぎ
 
 ーーー
 自動リセット仕様：
@@ -134,13 +139,3 @@ EditだけあってListがないってことはないから、EditのStateを
 →とりまこれでいく、全部解決する気がする
 
 ーーーー
-
-改修手順：
-
-・Fragから引数を消す
-・EditとListのVMを統合
-→EditVMを消す、イベント系はListの方へ足す（肥大化するがまあしゃあない）
-・VMの呼び出しをactivitViewmodels()に
-・ActivityにカスタムVMプロバイダ実装（引数付き）
-・統合VMに編集対象のメンバ追加、編集の度書き換え
-・AdapterにもVM渡すように改修

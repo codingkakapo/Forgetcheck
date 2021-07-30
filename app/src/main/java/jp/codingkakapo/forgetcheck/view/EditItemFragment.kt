@@ -1,8 +1,10 @@
 package jp.codingkakapo.forgetcheck.view
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +20,7 @@ import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 import jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel
 
-// AnxietyModelを受け取った時のみ更新モードとして動作する。
 class EditItemFragment()
-    //var anxietyList: ObservableArrayList<AnxietyModel>, var anxiety : AnxietyModel? = null
  : Fragment() {
 
     // CheckListとactivityScopeでVMを共用する。Frag破棄時にVM作り直せないので。
@@ -28,22 +28,19 @@ class EditItemFragment()
     private lateinit var binding : FragmentEditItemBinding
 
     init {
-        this.retainInstance
         // ToDo イベント処理登録
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Log.d("-----------------EditItemFragment---------------", "onCreate")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        //VMいれる anxietyがnullなら新規登録、入ってれば更新
-        //if(anxiety == null) vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList)
-        //else vm = EditItemViewModel(this.context?.applicationContext as ForgetCheckApplication, anxietyList, anxiety)
+        //Log.d("-----------------EditItemFragment---------------", "onCreateView")
 
         // binding初期化
         binding = FragmentEditItemBinding.inflate(inflater, container, false)
@@ -68,4 +65,58 @@ class EditItemFragment()
         return binding.root
     }
 
+    /*override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.d("-----------------EditItemFragment---------------", "onAttach")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("-----------------EditItemFragment---------------", "onDetach")
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.d("-----------------EditItemFragment---------------", "onActivityCreated")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.d("-----------------EditItemFragment---------------", "onViewCreated")
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        Log.d("-----------------EditItemFragment---------------", "onViewStateRestored")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("-----------------EditItemFragment---------------", "onStart")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("-----------------EditItemFragment---------------", "onStop")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("-----------------EditItemFragment---------------", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("-----------------EditItemFragment---------------", "onPause")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("-----------------EditItemFragment---------------", "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("-----------------EditItemFragment---------------", "onDestroy")
+    }*/
 }
