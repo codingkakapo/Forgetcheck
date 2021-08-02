@@ -1,30 +1,29 @@
-package jp.codingkakapo.forgetcheck.utils
+package jp.codingkakapo.forgetcheck.view
 
 import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AdapterView
 import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.lifecycle.LifecycleOwner
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.ViewChecklistItemBinding
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
-import jp.codingkakapo.forgetcheck.view.CheckListFragment
-import jp.codingkakapo.forgetcheck.view.EditItemFragment
-import jp.codingkakapo.forgetcheck.view.MainActivity
+import jp.codingkakapo.forgetcheck.utils.Const
+import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 import kotlinx.coroutines.*
 
 class CheckListItemAdapter(
-    private var data: ObservableArrayList<AnxietyModel>,
-    var app : ForgetCheckApplication,
+    private var data : ObservableArrayList<AnxietyModel>,
+    private var vm : CheckListViewModel,
+    private var app : ForgetCheckApplication,
     private val parentLifecycleOwner: LifecycleOwner
 ) : BaseAdapter()  {
 
@@ -75,13 +74,13 @@ class CheckListItemAdapter(
 
             // テキストクリック時のイベント設定
             checklistItemTextview.setOnClickListener {
-                val updateObj = data[position]
+                // vmに更新対象を知らせる
+                vm.editTargetAnxiety = data[position]
 
                 //Update用画面遷移
                 val mainActivity = ((binding.root.context as Activity) as MainActivity)
                 val tran = mainActivity.supportFragmentManager.beginTransaction()
                 // ToDo 編集（更新）実装
-                //tran.replace(R.id.check_list_fragment, EditItemFragment(data, updateObj))
                 tran.replace(R.id.check_list_fragment, EditItemFragment())
                 tran.addToBackStack(null)
                 tran.commit()

@@ -1,24 +1,14 @@
 package jp.codingkakapo.forgetcheck.view
 
-import android.app.Application
-import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.databinding.ObservableArrayList
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import jp.codingkakapo.forgetcheck.ForgetCheckApplication
-import jp.codingkakapo.forgetcheck.R
-import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
 import jp.codingkakapo.forgetcheck.databinding.FragmentEditItemBinding
-import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
-import jp.codingkakapo.forgetcheck.viewModel.EditItemViewModel
 
 class EditItemFragment()
  : Fragment() {

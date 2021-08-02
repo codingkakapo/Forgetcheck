@@ -13,7 +13,6 @@ import androidx.fragment.app.replace
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
-import jp.codingkakapo.forgetcheck.utils.CheckListItemAdapter
 import jp.codingkakapo.forgetcheck.utils.Const
 import jp.codingkakapo.forgetcheck.utils.observeSingle
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
@@ -47,11 +46,14 @@ class CheckListFragment : Fragment() {
         //Log.d("*****************CheckListFragment***************", "onActivityCreated")
 
         // ListViewにAdapterをセット
-        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
+        binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, vm, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
 
         // イベントが発火し続けないよう拡張（observeSingle）を使用
         // ToDo 新規登録処理修正
         vm.fabClickEvent.observeSingle(viewLifecycleOwner){
+            //　新規登録時は更新対象がないのでnull入れる　
+            vm.editTargetAnxiety = null
+
             val id = this.id
             parentFragmentManager.commit {
                 replace<EditItemFragment>(id)

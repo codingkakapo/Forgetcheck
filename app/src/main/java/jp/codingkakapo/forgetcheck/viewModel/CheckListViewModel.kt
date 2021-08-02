@@ -1,11 +1,15 @@
 package jp.codingkakapo.forgetcheck.viewModel
 
 import android.content.Context
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.model.AnxietyModel
 import jp.codingkakapo.forgetcheck.model.AppDataModel
+import jp.codingkakapo.forgetcheck.utils.Const
+import jp.codingkakapo.forgetcheck.utils.observeSingle
 import jp.codingkakapo.forgetcheck.utils.singleLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,10 +35,25 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     var resetButtonClickEvent = singleLiveData<Boolean>()
     var dataSetChangedEvent : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
+    // 文字列がUIから更新されるのを監視するObserver
+    private val onUpdateObserver : Observer<String> = Observer {
+        if(editTargetAnxiety != null){
+            viewModelScope.launch {
+                updateAnxieties(app, editTargetAnxiety, it)
+            }
+        } else {
+            viewModelScope.launch {
+                insertAnxieties(app, it)
+            }
+        }
+    }
+
 
     init{
 
-        // ToDo　Edit内容の反映処理をObserveで書く、新規と変更の区別を考える（UpdatedStringを監視）
+        // 文字列が更新されたときの処理（Observer）を登録
+        //editUpdatedString.observeForever(onUpdateObserver)
+        editUpdatedString.observeForever(onUpdateObserver)
 
         // 前回起動から1日経っていたらAnxietyのCheckを全て外す
         viewModelScope.launch {
@@ -126,7 +145,9 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     }
 
     // ToDo 移動したので合わせて修正すること。新規登録処理
-    private suspend fun insertAnxieties(app : ForgetCheckApplication, text : String){
+    private suspend fun insertAnxieties(app : ForgetCheckApplication, text : String?){
+        if(text == null) throw NullPointerException()
+
         val newAnxiety = AnxietyModel(0, text, LocalDateTime.now(), LocalDateTime.now(), false)
 
         // 画面に追加
@@ -139,8 +160,8 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     }
 
     // ToDo EditTextの文字更新時はもとのやつ出す　こちらも修正必要　編集処理
-    private suspend fun updateAnxieties(app : ForgetCheckApplication, updateTarget : AnxietyModel?, newStr : String){
-        if(updateTarget == null) throw Exception()
+    private suspend fun updateAnxieties(app : ForgetCheckApplication, updateTarget : AnxietyModel?, newStr : String?){
+        if(newStr == null || updateTarget == null) throw NullPointerException()
 
         updateTarget.name = newStr
 
@@ -168,6 +189,12 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         }
         // 画面側に反映する必要あるので呼ぶ、ObserveしてるFrag上でNotifyが呼ばれて画面更新
         dataSetChangedEvent.value = true
+    }
+
+    // VM破棄時に購読解除
+    override fun onCleared() {
+        super.onCleared()
+        editUpdatedString.removeObserver(onUpdateObserver)
     }
 
 }
