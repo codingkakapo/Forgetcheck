@@ -10,7 +10,7 @@ interface AnxietyDao {
     fun selectAll() : List<AnxietyModel>
 
     @Insert
-    fun insert(anxiety: AnxietyModel)
+    fun insert(anxiety: AnxietyModel) : Long
 
     @Delete
     fun delete(anxiety: AnxietyModel)

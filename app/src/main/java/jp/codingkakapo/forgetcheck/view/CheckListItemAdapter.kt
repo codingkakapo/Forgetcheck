@@ -92,6 +92,7 @@ class CheckListItemAdapter(
                 val targetAnxiety = data[position]
                 GlobalScope.launch {
                     deleteAnxiety(targetAnxiety)
+                    Log.d(Const.d, "removebutton clicked!!!!!! $targetAnxiety")
                 }
                 //画面から削除
                 data.removeAt(position)
@@ -117,6 +118,7 @@ class CheckListItemAdapter(
     private suspend fun deleteAnxiety(anxiety : AnxietyModel){
         withContext(Dispatchers.IO){
             app.DB.AnxietyDao().delete(anxiety)
+            Log.d(Const.d, "DB deleted!!!!!! $anxiety")
         }
     }
 

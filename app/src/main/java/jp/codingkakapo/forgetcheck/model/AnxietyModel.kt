@@ -9,7 +9,7 @@ import java.time.LocalDateTime
  */
 @Entity (tableName = "anxieties")
 data class AnxietyModel (
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) var id: Int,
     var name : String,
     val createdAt : LocalDateTime,
     val updatedAt : LocalDateTime,

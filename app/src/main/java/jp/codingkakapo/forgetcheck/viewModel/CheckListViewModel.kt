@@ -150,15 +150,19 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     private suspend fun insertAnxieties(app : ForgetCheckApplication, text : String?){
         if(text == null) throw NullPointerException()
 
+        var newId: Long
         val newAnxiety = AnxietyModel(0, text, LocalDateTime.now(), LocalDateTime.now(), false)
-
-        // 画面に追加
-        anxietyList.add(newAnxiety)
 
         // DBに追加
         withContext(Dispatchers.IO){
-            app.DB.AnxietyDao().insert(newAnxiety)
+            // Insertの戻り値でIDを確定させてから画面に反映
+            newId = app.DB.AnxietyDao().insert(newAnxiety)
+            newAnxiety.id = newId.toInt()
+            // 画面に追加
+            anxietyList.add(newAnxiety)
         }
+
+
     }
 
     // ToDo EditTextの文字更新時はもとのやつ出す　こちらも修正必要　編集処理
