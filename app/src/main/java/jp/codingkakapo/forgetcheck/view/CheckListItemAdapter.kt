@@ -72,8 +72,8 @@ class CheckListItemAdapter(
 
             item = data[position]
 
-            // テキストクリック時のイベント設定
-            checklistItemTextview.setOnClickListener {
+            // 項目クリック時のリスナー　編集画面へ飛ぶ
+            val onItemClickListener = View.OnClickListener {
                 // vmに更新対象を知らせる
                 vm.editTargetAnxiety = data[position]
 
@@ -85,6 +85,11 @@ class CheckListItemAdapter(
                 tran.addToBackStack(null)
                 tran.commit()
             }
+
+
+            // テキストクリック時のイベント設定
+            checklistItemTextview.setOnClickListener(onItemClickListener)
+            checklistItemLinearLayout.setOnClickListener(onItemClickListener)
 
             // 削除ボタンのイベント設定
             checklistItemButton.setOnClickListener {

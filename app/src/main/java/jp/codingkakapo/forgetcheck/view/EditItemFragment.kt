@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import jp.codingkakapo.forgetcheck.databinding.FragmentEditItemBinding
@@ -37,15 +38,12 @@ class EditItemFragment()
         // binding初期化
         binding = FragmentEditItemBinding.inflate(inflater, container, false)
 
-        /*
-         * フォーカス外れ、保存ボタン、バックなどで保存
-         */
         // テキスト入力欄フォーカスイベ登録
         binding.editText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) /* hasFocusがT・・・入力開始時nothing to do */
             else {
                 val str = (view as? EditText)?.text.toString()
-                if(str != vm.editUpdatedString.value){
+                if(str != vm.editUpdatedString.value && str.isNotBlank()){
                     vm.editUpdatedString.value = str
                 }
                 Log.d(Const.d,"FocusChanged!!!!!!!!!!!")
@@ -55,11 +53,15 @@ class EditItemFragment()
         // ボタン保存イベ登録
         binding.button.setOnClickListener {
             val str = binding.editText.text.toString()
-            if(str != vm.editUpdatedString.value){
+            if(str != vm.editUpdatedString.value && str.isNotBlank()){
                 vm.editUpdatedString.value = str
             }
             Log.d(Const.d,"save clicked!!!!!!!!!!!")
         }
+
+        // 開いたとき内容をEditTextにいれる
+        binding.editText.setText(vm.editTargetAnxiety?.name)
+
         return binding.root
     }
 
