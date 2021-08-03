@@ -49,7 +49,6 @@ class CheckListFragment : Fragment() {
         binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, vm, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
 
         // イベントが発火し続けないよう拡張（observeSingle）を使用
-        // ToDo 新規登録処理修正
         vm.fabClickEvent.observeSingle(viewLifecycleOwner){
             //　新規登録時は更新対象がないのでnull入れる　
             vm.editTargetAnxiety = null

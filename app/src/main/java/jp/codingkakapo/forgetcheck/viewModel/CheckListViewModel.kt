@@ -130,9 +130,9 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
     // 最終起動から1日以上経っているかの判断 now - last が1d以上ならリセット
     private fun judgeReset(last : LocalDateTime) : Boolean {
         val now = LocalDateTime.now()
-        val diffYears = ChronoUnit.YEARS.between(now, last)
-        val diffMonths = ChronoUnit.MONTHS.between(now,last)
-        val diffDays = ChronoUnit.DAYS.between(now,last)
+        val diffYears = ChronoUnit.YEARS.between(last, now)
+        val diffMonths = ChronoUnit.MONTHS.between(last, now)
+        val diffDays = ChronoUnit.DAYS.between(last, now)
         return diffYears > 1 || diffMonths > 1 || diffDays > 1
     }
 
