@@ -1,6 +1,7 @@
 package jp.codingkakapo.forgetcheck.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import jp.codingkakapo.forgetcheck.databinding.FragmentEditItemBinding
+import jp.codingkakapo.forgetcheck.utils.Const
 import jp.codingkakapo.forgetcheck.viewModel.CheckListViewModel
 
 class EditItemFragment()
@@ -43,14 +45,20 @@ class EditItemFragment()
             if (hasFocus) /* hasFocusがT・・・入力開始時nothing to do */
             else {
                 val str = (view as? EditText)?.text.toString()
-                vm.editUpdatedString.value = str
+                if(str != vm.editUpdatedString.value){
+                    vm.editUpdatedString.value = str
+                }
+                Log.d(Const.d,"FocusChanged!!!!!!!!!!!")
             }
         }
 
         // ボタン保存イベ登録
         binding.button.setOnClickListener {
             val str = binding.editText.text.toString()
-            vm.editUpdatedString.value = str
+            if(str != vm.editUpdatedString.value){
+                vm.editUpdatedString.value = str
+            }
+            Log.d(Const.d,"save clicked!!!!!!!!!!!")
         }
         return binding.root
     }

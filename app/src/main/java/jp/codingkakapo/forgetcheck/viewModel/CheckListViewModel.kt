@@ -40,10 +40,12 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         if(editTargetAnxiety != null){
             viewModelScope.launch {
                 updateAnxieties(app, editTargetAnxiety, it)
+                Log.d(Const.d,"update anxieties!!!!!!!!!!!")
             }
         } else {
             viewModelScope.launch {
                 insertAnxieties(app, it)
+                Log.d(Const.d,"insert anxieties!!!!!!!!!!!")
             }
         }
     }
