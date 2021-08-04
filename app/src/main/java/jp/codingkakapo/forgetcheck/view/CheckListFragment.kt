@@ -21,6 +21,7 @@ class CheckListFragment : Fragment() {
 
     val vm : CheckListViewModel by activityViewModels()
     lateinit var binding : FragmentChecklistBinding
+    private var alertDialog : AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +63,7 @@ class CheckListFragment : Fragment() {
 
         // リセットボタンの処理
         vm.resetButtonClickEvent.observeSingle(viewLifecycleOwner){
-            val alertDialog: AlertDialog? = activity?.let {
+            alertDialog = activity?.let {
                 val builder = AlertDialog.Builder(it)
                 builder.apply {
                     setPositiveButton(R.string.ok
@@ -138,11 +139,12 @@ class CheckListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("*****************CheckListFragment***************", "onDestroyView")
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
+        alertDialog?.dismiss()
         Log.d("*****************CheckListFragment***************", "onDestroy")
-    }*/
+    }
 }
 

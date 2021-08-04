@@ -57,6 +57,7 @@ class EditItemFragment()
                 vm.editUpdatedString.value = str
             }
             Log.d(Const.d,"save clicked!!!!!!!!!!!")
+            parentFragmentManager.popBackStack()
         }
 
         // 開いたとき内容をEditTextにいれる

@@ -1,27 +1,48 @@
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="item" type="jp.codingkakapo.forgetcheck.model.AnxietyModel"/>
     </data>
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/checklist_item_linear_layout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        android:background="@color/white"
         android:descendantFocusability="blocksDescendants">
         <CheckBox
             android:id="@+id/checklist_item_checkbox"
             android:checked="@{item.checked}"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-        <TextView
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:text='@{item.checked ? "OK" : "" }'
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:background="@{item.checked ? @color/green600 : @color/a400 }"
+            app:layout_constraintHorizontal_weight="0.2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/checklist_item_textview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+        </CheckBox>
+        <com.google.android.material.textview.MaterialTextView
+            app:layout_constraintHorizontal_weight="0.6"
             android:id="@+id/checklist_item_textview"
             android:text="@{item.Name}"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/checklist_item_button"
+            app:layout_constraintStart_toEndOf="@id/checklist_item_checkbox"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:textColor="@color/black"
+            android:ellipsize="end"
             android:textSize="28sp"/>
+<!--
         <TextView
             android:id="@+id/checklist_item_time"
             android:text="@{item.createdAt.toString()}"
@@ -30,11 +51,18 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="10sp"/>
-        <Button
+-->
+        <com.google.android.material.button.MaterialButton
+            app:layout_constraintHorizontal_weight="0.2"
             android:id="@+id/checklist_item_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checklist_item_textview"
+            app:layout_constraintEnd_toEndOf="parent"
             android:text="削除"
+            android:textSize="15sp"
             />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

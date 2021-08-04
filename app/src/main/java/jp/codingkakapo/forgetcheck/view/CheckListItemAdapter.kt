@@ -105,13 +105,14 @@ class CheckListItemAdapter(
 
             // CheckBoxのイベント設定
             checklistItemCheckbox.setOnClickListener {
-                var targetAnxiety = data[position]
+                val targetAnxiety = data[position]
                 // 真偽反転、画面に変更反映される
                 targetAnxiety.checked = !targetAnxiety.checked
                 // DB上でも変更
                 GlobalScope.launch {
                     changeAnxietyChecked(targetAnxiety)
                 }
+                notifyDataSetChanged()
             }
 
             executePendingBindings()
