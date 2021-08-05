@@ -45,6 +45,8 @@ class CheckListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //Log.d("*****************CheckListFragment***************", "onActivityCreated")
+        // toolbarをセット
+        // binding.checklistToolbar.inflateMenu(R.menu.toolbar_menu)
 
         // ListViewにAdapterをセット
         binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, vm, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)

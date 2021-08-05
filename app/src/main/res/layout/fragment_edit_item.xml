@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="vm"
@@ -9,23 +10,38 @@
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
+    android:background="@color/gray200"
+    android:padding="16dp"
     tools:context="jp.codingkakapo.forgetcheck.view.EditItemFragment"
     android:orientation="vertical">
-        <EditText
-            android:id="@+id/edit_text"
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="10dp"
+            android:padding="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="28dp"
-            android:hint="内容を入力してください"
-            android:inputType="text"
-            android:textColor="@color/white"
-            />
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="登録"
-            />
+            android:layout_height="wrap_content" >
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="26sp"
+                android:hint="@string/edit_hint"
+                android:inputType="text"
+                android:textColor="@color/gray800"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/done_black_24dp"
+                android:text="登録"
+                android:textColor="@color/white"
+                />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </layout>

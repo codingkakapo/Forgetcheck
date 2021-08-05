@@ -4,6 +4,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="test">test dayo</string>
     <string name="uncheck_message">解除してよろしいですか？</string>
+    <string name="app_name_jp">お出かけチェック</string>
+    <string name="help">help</string>
+    <string name="description_help">help description</string>
+    <string name="edit_description">チェック項目の登録</string>
+    <string name="title_help">help title</string>
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
+    <string name="edit_hint">内容を入力してください</string>
 </resources>

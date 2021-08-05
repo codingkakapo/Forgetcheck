@@ -116,7 +116,7 @@ class CheckListViewModel(var app: ForgetCheckApplication) : AndroidViewModel(app
         }
 
         withContext(Dispatchers.Main){
-            date.value = "${month}月 ${day}日 （${dow}）"
+            date.value = "${month}月${day}日(${dow})"
         }
     }
 

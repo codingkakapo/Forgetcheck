@@ -7,15 +7,24 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="indigo200">#9FA8DA</color>
+    <color name="indigo400">#5C6BC0</color>
+    <color name="indigo800">#283593</color>
+
     <!-- Theme & Accent -->
     <color name="theme300">#FF8A65</color>
     <color name="theme500">#FF5722</color>
     <color name="accent500">#1E88E5</color>
-
-    <!-- Greyscales -->
-    <color name="grey200">#EEEEEE</color>
-    <color name="grey600">#757575</color>
     <color name="a400">#FFEA00</color>
+    <color name="a700">#304FFE</color>
+
+    <!-- Grayscale -->
+    <color name="gray200">#EEEEEE</color>
+    <color name="gray600">#757575</color>
+    <color name="gray800">#424242</color>
     <!-- Others -->
+    <color name="green200">#A5D6A7</color>
+    <color name="green500">#4CAF50</color>
     <color name="green600">#43A047</color>
 </resources>
