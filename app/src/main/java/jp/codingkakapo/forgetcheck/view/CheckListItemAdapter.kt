@@ -72,8 +72,8 @@ class CheckListItemAdapter(
 
             item = data[position]
 
-            // 項目クリック時のリスナー　編集画面へ飛ぶ
-            val onItemClickListener = View.OnClickListener {
+            // 項目長押し時のリスナー　編集画面へ飛ぶ
+            val onItemLongClickListener = View.OnLongClickListener {
                 // vmに更新対象を知らせる
                 vm.editTargetAnxiety = data[position]
 
@@ -84,27 +84,13 @@ class CheckListItemAdapter(
                 tran.replace(R.id.check_list_fragment, EditItemFragment())
                 tran.addToBackStack(null)
                 tran.commit()
+
+                //onClickは発火させない
+                false
             }
 
-
-            // テキストクリック時のイベント設定
-            checklistItemTextview.setOnClickListener(onItemClickListener)
-            checklistItemLinearLayout.setOnClickListener(onItemClickListener)
-
-            // 削除ボタンのイベント設定
-            checklistItemButton.setOnClickListener {
-                //DBから削除
-                val targetAnxiety = data[position]
-                GlobalScope.launch {
-                    deleteAnxiety(targetAnxiety)
-                    Log.d(Const.d, "removebutton clicked!!!!!! $targetAnxiety")
-                }
-                //画面から削除
-                data.removeAt(position)
-            }
-
-            // CheckBoxのイベント設定
-            checklistItemCheckbox.setOnClickListener {
+            // 単に項目クリック時は、チェックの切り替えを行うようにする
+            val onItemClickListener = View.OnClickListener {
                 val targetAnxiety = data[position]
                 // 真偽反転、画面に変更反映される
                 targetAnxiety.checked = !targetAnxiety.checked
@@ -115,6 +101,31 @@ class CheckListItemAdapter(
                 notifyDataSetChanged()
             }
 
+            // テキストクリック時のイベント設定
+            checklistItemTextview.setOnClickListener(onItemClickListener)
+            // テキスト長押し時のイベント設定
+            checklistItemTextview.setOnLongClickListener(onItemLongClickListener)
+            // パーツ以外の余白部分クリック時イベント設定
+            checklistItemLinearLayout.setOnClickListener(onItemClickListener)
+            // パーツ以外の余白部分長押し時イベント設定
+            checklistItemLinearLayout.setOnLongClickListener(onItemLongClickListener)
+            // CheckBoxクリック時のイベント設定
+            checklistItemCheckbox.setOnClickListener(onItemClickListener)
+
+            // 削除ボタンのイベント設定　誤クリック防止のため長押しにしておく
+            checklistItemButton.setOnLongClickListener {
+                //DBから削除
+                val targetAnxiety = data[position]
+                GlobalScope.launch {
+                    deleteAnxiety(targetAnxiety)
+                    Log.d(Const.d, "removebutton clicked!!!!!! $targetAnxiety")
+                }
+                //画面から削除
+                data.removeAt(position)
+
+                // onClickは発火させない
+                false
+            }
             executePendingBindings()
         }
 
