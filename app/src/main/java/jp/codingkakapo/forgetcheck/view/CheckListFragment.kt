@@ -1,5 +1,6 @@
 package jp.codingkakapo.forgetcheck.view
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
@@ -45,8 +46,23 @@ class CheckListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //Log.d("*****************CheckListFragment***************", "onActivityCreated")
+
         // toolbarをセット
-        // binding.checklistToolbar.inflateMenu(R.menu.toolbar_menu)
+        binding.checklistToolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.help -> {
+                    // HELPに画面遷移
+                    val id = this.id
+                    parentFragmentManager.commit {
+                        replace<HelpFragment>(id)
+                        addToBackStack(null)
+                    }
+                    true
+                }
+                else -> false
+            }
+
+        }
 
         // ListViewにAdapterをセット
         binding.itemList.adapter = CheckListItemAdapter(vm.anxietyList, vm, this.context?.applicationContext as ForgetCheckApplication, viewLifecycleOwner)
