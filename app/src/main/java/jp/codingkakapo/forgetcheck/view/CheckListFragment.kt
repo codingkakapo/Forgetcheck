@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import jp.codingkakapo.forgetcheck.ForgetCheckApplication
 import jp.codingkakapo.forgetcheck.R
 import jp.codingkakapo.forgetcheck.databinding.FragmentChecklistBinding
@@ -46,6 +49,11 @@ class CheckListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         //Log.d("*****************CheckListFragment***************", "onActivityCreated")
+
+        // 広告
+        var mAdView = activity?.findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView?.loadAd(adRequest)
 
         // toolbarをセット
         binding.checklistToolbar.setOnMenuItemClickListener {
