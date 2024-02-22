@@ -6,15 +6,15 @@ plugins {
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
     dataBinding { enabled true }
 
     defaultConfig {
-        applicationId "com.codingkakapo.forgetcheck"
+        applicationId "jp.codingkakapo.forgetcheck"
         minSdkVersion 26
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 33
+        versionCode 3
+        versionName "1.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,4 +51,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.android.gms:play-services-ads:20.2.0'
+    constraints {
+        implementation('androidx.work:work-runtime:2.7.0') {
+            because 'previous versions have a bug impacting this application'
+        }
+    }
 }
